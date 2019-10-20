@@ -27,22 +27,24 @@ func (timer *Timer) Start() {
 
 	go func(timer *Timer) {
 		for {
-			select {
-			case <-timer.ticker.C:
-				go func(timer *Timer) {
-					timer.iterations = timer.iterations + 1
+			if timer.running {
+				select {
+				case <-timer.ticker.C:
+					go func(timer *Timer) {
+						timer.iterations = timer.iterations + 1
 
-					if timer.maxIntervals >= 0 && timer.iterations > timer.maxIntervals {
-						timer.Stop()
-						return
-					}
+						if timer.maxIntervals >= 0 && timer.iterations > timer.maxIntervals {
+							timer.Stop()
+							return
+						}
 
-					timer.fn(timer.args)
-				}(timer)
+						timer.fn(timer.args)
+					}(timer)
 
-			case <-timer.process:
-				timer.Stop()
-				return
+				case <-timer.process:
+					timer.Stop()
+					return
+				}
 			}
 		}
 	}(timer)
@@ -73,7 +75,7 @@ func (timer *Timer) IsRunning() bool {
 		return false
 	}
 
-	return false
+	return timer.running
 }
 
 // SetInterval runs the specified function every `X` milliseconds, where

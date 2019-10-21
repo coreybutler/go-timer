@@ -16,4 +16,4 @@ install:
   - # Skip
 
 script:
-  - go test
+  - go test -v

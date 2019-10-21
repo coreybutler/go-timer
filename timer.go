@@ -1,6 +1,8 @@
 package timer
 
-import "time"
+import (
+	"time"
+)
 
 // Timer represents a monitor/iterator that runs
 // a function on a given interval.
@@ -21,6 +23,11 @@ func (timer *Timer) Start() {
 		return
 	}
 
+	if timer.process != nil {
+		close(timer.process)
+	}
+
+	timer.running = true
 	timer.process = make(chan struct{})
 	timer.ticker = time.NewTicker(timer.interval)
 	timer.iterations = 0
@@ -31,31 +38,42 @@ func (timer *Timer) Start() {
 				select {
 				case <-timer.ticker.C:
 					go func(timer *Timer) {
+						if !timer.running {
+							return
+						}
+
 						timer.iterations = timer.iterations + 1
 
-						if timer.maxIntervals >= 0 && timer.iterations > timer.maxIntervals {
+						if timer.maxIntervals > 0 && timer.iterations > timer.maxIntervals {
 							timer.Stop()
 							return
 						}
 
 						timer.fn(timer.args)
+
+						if timer.maxIntervals == 0 {
+							timer.Stop()
+							return
+						}
 					}(timer)
 
 				case <-timer.process:
 					timer.Stop()
 					return
 				}
+			} else {
+				return
 			}
 		}
 	}(timer)
-
-	timer.running = true
 }
 
 // Stop the timer.
 func (timer *Timer) Stop() {
-	close(timer.process)
-	timer.running = false
+	if timer.running {
+		close(timer.process)
+		timer.running = false
+	}
 }
 
 // Count represents the number of times the interval has been processed.

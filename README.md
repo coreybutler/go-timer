@@ -4,7 +4,7 @@
 [![GoDoc](https://godoc.org/github.com/coreybutler/go-timer?status.svg)](https://godoc.org/github.com/coreybutler/go-timer)
 [![Build Status](https://travis-ci.org/coreybutler/go-timer.svg?branch=master)](https://travis-ci.org/coreybutler/go-timer)
 
-Use timers and intervals like you ould in JavaScript, but in Go.
+Use timers and intervals like you would in JavaScript, but in Go.
 
 **Install** `go get github.com/coreybutler/go-timer`
 

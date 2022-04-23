@@ -23,6 +23,10 @@ func main () {
   t := timer.SetInterval(func (args ...interface{}) {
     fmt.Println(args)
   }, 1000, "hello world")
+  
+  t2 := timer.SetTimeout(func (args ...interface{}) {
+    fmt.Println(args)
+  }, 1200, "I ran once")
 
   time.Sleep(5 * time.Second)
 }
@@ -32,6 +36,7 @@ After running for 5 seconds, the script above would output:
 
 ```sh
 hello world
+I ran once
 hello world
 hello world
 hello world

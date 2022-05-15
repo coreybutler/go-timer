@@ -49,7 +49,7 @@ func (timer *Timer) Start() {
 							return
 						}
 
-						timer.fn(timer.args)
+						timer.fn(timer.args...)
 
 						if timer.maxIntervals == 0 {
 							timer.Stop()

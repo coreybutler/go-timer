@@ -11,7 +11,7 @@ type Timer struct {
 	maxIntervals int
 	iterations   int
 	fn           func(args ...interface{})
-	args         interface{}
+	args         []interface{}
 	ticker       *time.Ticker
 	process      chan struct{}
 	running      bool
